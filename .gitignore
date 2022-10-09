@@ -4,3 +4,4 @@
 
 /back/node_modules
 /back/.config.env
+/back/public
