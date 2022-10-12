@@ -6,8 +6,7 @@ import {
   ModalOverlay,
   Spinner,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { backend } from "../../../.config";
 import { useFetch } from "../../hooks/useFetch";
 import { useStateContext } from "../../hooks/useStateContext";

@@ -1,8 +1,8 @@
-import { validateLogin } from "../../../utils/Validator";
-import { useFetch } from "../../../hooks/useFetch";
-import { backend } from "../../../../.config";
 import { Heading } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import { useFetch } from "../../../hooks/useFetch";
+import { backend } from "../../../../.config";
+import { validateLogin } from "../../../utils/Validator";
 import { useStateContext } from "../../../hooks/useStateContext";
 
 import LoginForm from "./LoginForm";

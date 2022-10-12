@@ -1,6 +1,6 @@
 import React, { Suspense, useState } from "react";
-import Loader from "../../utils/Loader";
 import { Box } from "@chakra-ui/react";
+import Loader from "../../utils/Loader";
 import Login from "./Login/Index";
 const SignUp = React.lazy(() => import("./SignUp/Index"));
 import styles from "./Auth.module.css";

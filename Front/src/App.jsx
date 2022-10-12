@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-
 import { useStateContext } from "./hooks/useStateContext";
 import Auth from "./pages/auth/Index";
 const Home = React.lazy(() => import("./pages/home/Index"));
