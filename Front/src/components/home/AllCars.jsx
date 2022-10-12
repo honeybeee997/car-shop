@@ -6,29 +6,24 @@ import {
   ModalOverlay,
   Spinner,
 } from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { backend } from "../../../.config";
-import { StateContext } from "../../store/StateContext";
+import { useFetch } from "../../hooks/useFetch";
+import { useStateContext } from "../../hooks/useStateContext";
 import CarsList from "../user/CarsList";
 
 const AllCars = ({ AllCarsIsOpen, AllCarsOnClose }) => {
-  const { token } = useContext(StateContext);
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState();
-
+  const { token } = useStateContext();
+  const [sendRequest, isLoading] = useFetch();
+  const [cars, setCars] = useState();
   useEffect(() => {
     (async function () {
-      setIsLoading(true);
-      const response = await fetch(`${backend}/cars/`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-      setData(data.user.cars);
-      setIsLoading(false);
+      const headers = {
+        Authorization: "Bearer " + token,
+      };
+      const data = await sendRequest(`${backend}/cars/`, "GET", null, headers);
+      setCars(data.user.cars);
     })();
   }, [AllCarsIsOpen]);
 
@@ -59,7 +54,7 @@ const AllCars = ({ AllCarsIsOpen, AllCarsOnClose }) => {
               size="xl"
             />
           ) : (
-            <CarsList data={data} />
+            <CarsList data={cars} />
           )}
         </ModalBody>
       </ModalContent>

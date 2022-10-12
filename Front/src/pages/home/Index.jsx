@@ -2,17 +2,15 @@ import React from "react";
 import { Button, useDisclosure } from "@chakra-ui/react";
 import { BiUser } from "react-icons/bi";
 import Drawer from "../../components/home/HomeDrawer";
-import HomeForm from "../../components/home/HomeForm";
+import HomeForm from "../../components/home/HomeForm/Index";
 
 const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <main className="screen-center">
-        <HomeForm />
-        <Drawer DrawerOnClose={onClose} DrawerOpen={isOpen} />
-      </main>
+      <HomeForm />
+      <Drawer DrawerOnClose={onClose} DrawerOpen={isOpen} />
       <Button
         bg="transparent"
         fontSize="2rem"

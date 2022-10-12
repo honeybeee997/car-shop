@@ -1,6 +1,6 @@
-const path = require("path");
 const router = require("express").Router();
 const multer = require("multer");
+const authenticateToken = require("../utils/authenticateToken");
 const carsController = require("../controllers/carsController");
 const { validate } = require("../utils/validator");
 
@@ -22,6 +22,8 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
 });
+
+router.use(authenticateToken);
 
 router.get("/", carsController.getAllCars);
 

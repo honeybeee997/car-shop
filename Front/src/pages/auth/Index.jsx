@@ -1,9 +1,9 @@
-import React from "react";
-import { useState } from "react";
-import Login from "./Login/Index";
-import SignUp from "./SignUp/Index";
-import styles from "./Auth.module.css";
+import React, { Suspense, useState } from "react";
+import Loader from "../../utils/Loader";
 import { Box } from "@chakra-ui/react";
+import Login from "./Login/Index";
+const SignUp = React.lazy(() => import("./SignUp/Index"));
+import styles from "./Auth.module.css";
 
 const Auth = () => {
   const [login, setLogin] = useState(true);
@@ -13,9 +13,15 @@ const Auth = () => {
   };
 
   return (
-    <main className="screen-center">
+    <>
       <Box bg="white" className={styles.card} p="3rem">
-        {login === true ? <Login /> : <SignUp />}
+        {login === true ? (
+          <Login />
+        ) : (
+          <Suspense fallback={<Loader />}>
+            <SignUp />
+          </Suspense>
+        )}
         <div className="text-center mode-switcher">
           <span>
             {login === true
@@ -31,7 +37,7 @@ const Auth = () => {
           </button>
         </div>
       </Box>
-    </main>
+    </>
   );
 };
 

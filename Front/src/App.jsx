@@ -1,13 +1,24 @@
-import { useContext } from "react";
+import React, { Suspense } from "react";
 
+import { useStateContext } from "./hooks/useStateContext";
 import Auth from "./pages/auth/Index";
-import Home from "./pages/home/Index";
-import { StateContext } from "./store/StateContext";
+const Home = React.lazy(() => import("./pages/home/Index"));
+import Loader from "./utils/Loader";
 
 function App() {
-  const { isLoggedIn } = useContext(StateContext);
+  const { isLoggedIn } = useStateContext();
 
-  return <>{isLoggedIn ? <Home /> : <Auth />}</>;
+  return (
+    <main className="screen-center">
+      {isLoggedIn ? (
+        <Suspense fallback={<Loader />}>
+          <Home />
+        </Suspense>
+      ) : (
+        <Auth />
+      )}
+    </main>
+  );
 }
 
 export default App;

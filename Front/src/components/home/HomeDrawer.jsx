@@ -7,12 +7,13 @@ import {
   DrawerOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import React, { Suspense, useContext } from "react";
 import { BiUser } from "react-icons/bi";
 import { FiLogOut } from "react-icons/fi";
 import { IoCarSportSharp } from "react-icons/io5";
 import { StateContext } from "../../store/StateContext";
 import AllCars from "./AllCars";
+import Loader from "../../utils/Loader";
 import Logout from "./Logout";
 
 const drawerStyles = {
@@ -83,12 +84,16 @@ const HomeDrawer = ({ DrawerOnClose, DrawerOpen }) => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <AllCars
-        AllCarsIsOpen={AllCarsIsOpen}
-        AllCarsOnClose={AllCarsOnClose}
-        onCL
-      />
-      <Logout LogoutIsOpen={LogoutIsOpen} LogoutClose={LogoutOnClose} />
+      <Suspense fallback={<Loader />}>
+        <AllCars
+          AllCarsIsOpen={AllCarsIsOpen}
+          AllCarsOnClose={AllCarsOnClose}
+          onCL
+        />
+      </Suspense>
+      <Suspense fallback={<Loader />}>
+        <Logout LogoutIsOpen={LogoutIsOpen} LogoutClose={LogoutOnClose} />
+      </Suspense>
     </>
   );
 };

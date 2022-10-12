@@ -1,64 +1,53 @@
 const jwt = require("jsonwebtoken");
 const users = require("../models/userModel");
+const handleAsync = require("../utils/handleAsync");
 
-const sendToken = (id, user, req, res) => {
+const sendToken = (id, user, message, req, res) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET);
 
   return res.status(200).json({
     status: "success",
+    message,
     token,
     user,
   });
 };
 
-exports.signUp = async (req, res, next) => {
-  try {
-    const { fullName: name, email, password } = req.body;
+exports.signUp = handleAsync(async (req, res, next) => {
+  const { fullName: name, email, password } = req.body;
 
-    const duplicateUser = await users.findOne({ email });
-    if (duplicateUser) {
-      return res.status(400).json({
-        status: "fail",
-        message: "User with this email already exists",
-      });
-    }
-
-    const newUser = await users.create({ name, email, password });
-
-    sendToken(newUser._id, newUser, req, res);
-  } catch (err) {
-    res.status(400).json({
+  const duplicateUser = await users.findOne({ email });
+  if (duplicateUser) {
+    return res.status(400).json({
       status: "fail",
-      message: "Unable to create account. Please try again",
+      message: "User with this email already exists",
     });
   }
-};
 
-exports.login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+  const newUser = await users.create({ name, email, password });
 
-    const user = await users.findOne({ email });
+  const message = "Created account successully and logged you in";
+  sendToken(newUser._id, newUser, message, req, res);
+});
 
-    if (!user) {
-      return res.status(400).json({
-        status: "fail",
-        message: "This Email does not exist. Please Sign up first",
-      });
-    }
+exports.login = handleAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-    if (!(await user.isCorrectPassword(password, user.password))) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Password is incorrect",
-      });
-    }
+  const user = await users.findOne({ email });
 
-    sendToken(user._id, user, req, res);
-  } catch (err) {
-    res.status(400).json({
+  if (!user) {
+    return res.status(400).json({
       status: "fail",
-      message: "Unable to Login. Please try again",
+      message: "This Email does not exist. Please Sign up first",
     });
   }
-};
+
+  if (!(await user.isCorrectPassword(password, user.password))) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Password is incorrect",
+    });
+  }
+  const message = "Logged you in successully";
+  sendToken(user._id, user, message, req, res);
+});

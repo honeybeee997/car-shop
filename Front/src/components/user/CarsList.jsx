@@ -5,8 +5,6 @@ import CarsListItem from "./CarsListItem";
 const CarsList = ({ data }) => {
   const [cars, setCars] = useState(data);
 
-  console.log(cars);
-
   const filterCars = (id) => {
     const remaining = cars.filter((car) => {
       return car._id !== id;

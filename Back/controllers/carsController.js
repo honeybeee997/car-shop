@@ -1,29 +1,9 @@
-const { promisify } = require("util");
-const jwt = require("jsonwebtoken");
 const cars = require("../models/carModel");
 const users = require("../models/userModel");
+const handleAsync = require("../utils/handleAsync");
 
-exports.createCar = async (req, res, next) => {
-  const authorization = req.headers.authorization;
-  const token = authorization.split("Bearer ")[1];
-  if (!authorization || !token) {
-    res.status(401).json({
-      status: "fail",
-      message: "Please provide a token to post a car",
-    });
-    return;
-  }
-  let decoded;
-  try {
-    decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      status: "fail",
-      message: "Invalid Token",
-    });
-  }
-
-  const user = await users.findById(decoded.id);
+exports.createCar = handleAsync(async (req, res, next) => {
+  const user = req.user;
 
   const { model, price, phone, city } = req.body;
 
@@ -43,31 +23,12 @@ exports.createCar = async (req, res, next) => {
     message: "Car Posted Successfully",
     car: newCar,
   });
-};
+});
 
-exports.getAllCars = async (req, res, next) => {
-  const authorization = req.headers.authorization;
-  const token = authorization?.split("Bearer ")[1];
-  if (!authorization || !token) {
-    res.status(401).json({
-      status: "fail",
-      message: "Please provide a token to view Cars",
-    });
-    return;
-  }
-  let decoded;
-  try {
-    decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      status: "fail",
-      message: "Invalid Token",
-    });
-  }
-
-  const user = await users.findById(decoded.id).populate("cars");
+exports.getAllCars = handleAsync(async (req, res, next) => {
+  const user = await users.findById(req.user._id).populate("cars");
   res.status(200).json({
     status: "success",
     user,
   });
-};
+});
